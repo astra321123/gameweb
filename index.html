@@ -7,31 +7,24 @@
 </head>
 <body>
 
-
-<!-- ===== مكان إعلان Adsterra أعلى الصفحة ===== -->
-<div id="top-ad">
-  <!-- ضع كود Adsterra هنا -->
-</div>
+<div id="top-ad"></div>
 
 <div class="game-container">
   <canvas id="gameCanvas"></canvas>
-
-  <!-- الجويستيك -->
   <div id="joystick-container"></div>
-
-  <!-- HUD أو واجهة إضافية -->
   <div id="hud"></div>
 </div>
 
-<!-- ===== مكان إعلان Adsterra أسفل الصفحة ===== -->
-<div id="bottom-ad">
-  <!-- ضع كود Adsterra هنا -->
-</div>
+<div id="bottom-ad"></div>
 
+<!-- 🔥 المكتبات أولاً -->
+<script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.152.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://unpkg.com/three@0.152.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://raw.githubusercontent.com/yoannmoinet/nipplejs/master/dist/nipplejs.min.js"></script>
+
+<!-- 🔥 كودك -->
 <script src="script.js"></script>
-<script src="three.min.js"></script>
-<script src="GLTFLoader.js"></script>
-<script src="OrbitControls.js"></script>
-<script src="nipplejs.min.js"></script>
+
 </body>
 </html>
