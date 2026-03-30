@@ -1,6 +1,5 @@
 window.onload = function(){
 
-// ====== إعداد المشهد والكاميرا ======
 const canvas = document.getElementById("gameCanvas");
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
@@ -16,7 +15,6 @@ let cameraOffset = new THREE.Vector3(0, 3, -5);
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 
 // ====== إضاءة ======
 const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -24,18 +22,19 @@ light.position.set(5,10,7.5);
 scene.add(light);
 
 // ====== أرضية ======
-const groundGeo = new THREE.PlaneGeometry(100, 100);
-const groundMat = new THREE.MeshStandardMaterial({color:0x222222});
-const ground = new THREE.Mesh(groundGeo, groundMat);
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(100, 100),
+  new THREE.MeshStandardMaterial({color:0x222222})
+);
 ground.rotation.x = -Math.PI/2;
 scene.add(ground);
 
-// ====== تحميل شخصية 3D مع Mixamo أنيميشن ======
-const loader = new GLTFLoader(); // ✅ صح
+// ====== تحميل شخصية ======
+const loader = new GLTFLoader();
 let player, mixer, actions = {}, activeAction;
 
 loader.load(
-  "https://threejs.org/examples/models/gltf/Xbot.glb", // مثال جاهز
+  "https://threejs.org/examples/models/gltf/Xbot.glb",
   function(gltf){
     player = gltf.scene;
     scene.add(player);
@@ -47,16 +46,10 @@ loader.load(
 
     activeAction = actions['Idle'];
     if(activeAction) activeAction.play();
-  },
-  undefined,
-  function(error){ console.error(error); }
+  }
 );
 
-// ====== فيزياء بسيطة ======
-let velocity = new THREE.Vector3(0,0,0);
-const GRAVITY = -9.8;
-
-// ====== جويستيك touchscreen ======
+// ====== جويستيك ======
 const joystick = nipplejs.create({
     zone: document.getElementById('joystick-container'),
     mode: 'static',
@@ -73,7 +66,7 @@ joystick.on('move', function(evt, data){
 });
 joystick.on('end', function(){ move.x=0; move.z=0; });
 
-// ====== التحكم بالأنيميشن ======
+// ====== أنيميشن ======
 function setAction(name){
     if(!actions[name]) return;
     if(activeAction===actions[name]) return;
@@ -82,43 +75,33 @@ function setAction(name){
     activeAction.reset().fadeIn(0.2).play();
 }
 
-// ====== تحديث حركة اللاعب ======
-function updatePlayer(delta){
-    if(!player) return;
-
-    player.position.x += move.x * delta * 5;
-    player.position.z += move.z * delta * 5;
-
-    velocity.y += GRAVITY * delta;
-    player.position.y += velocity.y * delta;
-    if(player.position.y<0){ player.position.y=0; velocity.y=0; }
-
-    if(player.position.y>0){ setAction('Jump'); }
-    else if(move.x!==0 || move.z!==0){ setAction('Run'); }
-    else { setAction('Idle'); }
-
-    camera.position.copy(player.position).add(cameraOffset);
-    camera.lookAt(player.position);
-}
-
-// ====== Loop اللعبة ======
+// ====== تحديث ======
 const clock = new THREE.Clock();
+let velocity = new THREE.Vector3(0,0,0);
+
 function animate(){
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
 
-    if(mixer) mixer.update(delta);
-    updatePlayer(delta);
+    if(player){
+        player.position.x += move.x * delta * 5;
+        player.position.z += move.z * delta * 5;
 
+        velocity.y -= 9.8 * delta;
+        player.position.y += velocity.y * delta;
+        if(player.position.y<0){ player.position.y=0; velocity.y=0; }
+
+        if(player.position.y>0){ setAction('Jump'); }
+        else if(move.x!==0 || move.z!==0){ setAction('Run'); }
+        else { setAction('Idle'); }
+
+        camera.position.copy(player.position).add(cameraOffset);
+        camera.lookAt(player.position);
+    }
+
+    if(mixer) mixer.update(delta);
     renderer.render(scene, camera);
 }
 animate();
 
-// ====== إعادة تحجيم عند تغيير حجم النافذة ======
-window.addEventListener("resize", ()=>{
-    camera.aspect = window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-}; // نهاية window.onload
+};
