@@ -12,7 +12,6 @@ body {
     height: 100vh;
 }
 
-/* الجويستيك */
 #joystick-container {
     position: absolute;
     bottom: 20px;
@@ -22,7 +21,6 @@ body {
     height: 150px;
 }
 
-/* HUD */
 #hud {
     position: absolute;
     top: 20px;
@@ -31,7 +29,6 @@ body {
     color:white;
 }
 
-/* أماكن الإعلانات */
 #top-ad, #bottom-ad {
     width: 100%;
     text-align:center;
