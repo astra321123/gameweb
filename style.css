@@ -1,0 +1,43 @@
+body {
+    margin:0;
+    overflow:hidden;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle, #020617, #000);
+    color:white;
+}
+
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* الجويستيك */
+#joystick-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 150px;
+}
+
+/* HUD */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color:white;
+}
+
+/* أماكن الإعلانات */
+#top-ad, #bottom-ad {
+    width: 100%;
+    text-align:center;
+    padding:10px;
+    position: absolute;
+    z-index: 10;
+}
+#top-ad { top:0; }
+#bottom-ad { bottom:0; }
